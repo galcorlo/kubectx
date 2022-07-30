@@ -116,7 +116,7 @@ choose_namespace_interactive() {
   local choice
   choice="$(_KUBECTX_FORCE_COLOR=1 \
     FZF_DEFAULT_COMMAND="${SELF_CMD}" \
-    fzf --ansi --no-preview || true)"
+    fzf --cycle --ansi --no-preview --select-1 --query "$*" || true)"
   if [[ -z "${choice}" ]]; then
     echo 2>&1 "error: you did not choose any of the options"
     exit 1
@@ -214,7 +214,7 @@ main() {
     elif [[ "${1}" =~ (.+)=(.+) ]]; then
       alias_context "${BASH_REMATCH[2]}" "${BASH_REMATCH[1]}"
     else
-      set_namespace "${1}"
+      choose_namespace_interactive "${1}"
     fi
   else
     echo "error: too many flags" >&2
